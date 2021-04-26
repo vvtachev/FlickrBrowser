@@ -14,16 +14,28 @@ enum DownloadStatus {IDLE, PROCESSING, NOT_INITIALISED, FAILED_OR_EMPTY, OK}
 
 class GetRawData extends AsyncTask<String, Void, String> {
     private static final String TAG = "GetRawData";
+    private final OnDownloadComplete mCallBack;
+
+    interface OnDownloadComplete {
+        void onDownloadComplete(String data, DownloadStatus status);
+    }
 
     private DownloadStatus mDownloadStatus;
 
-    public GetRawData() {
+    public GetRawData(OnDownloadComplete callBack) {
         this.mDownloadStatus = DownloadStatus.IDLE;
+        this.mCallBack = callBack;
     }
 
     @Override
     protected void onPostExecute(String s) {
-        Log.d(TAG, "onPostExecute: parameter = " + s);
+        Log.d(TAG, "onPostExecute: Parameter = " + s);
+
+        if (mCallBack != null) {
+            mCallBack.onDownloadComplete(s, mDownloadStatus);
+        }
+
+        Log.d(TAG, "onPostExecute: ENDS");
 //        super.onPostExecute(s);
     }
 

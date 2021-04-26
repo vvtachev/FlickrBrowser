@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GetRawData.OnDownloadComplete {
     private static final String TAG = "MainActivity";
 
     @Override
@@ -19,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        GetRawData getRawData = new GetRawData(this);
+        getRawData.execute("https://api.flickr.com/services/feeds/photos_public.gne?tags=cats&tagmode=any&format=json&nojsoncallback=1");
 
         Log.d(TAG, "onCreate: ENDS");
     }
@@ -46,4 +49,25 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onOptionsItemSelected() returned");
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onDownloadComplete(String data, DownloadStatus status) {
+        if (status == DownloadStatus.OK) {
+            Log.d(TAG, "onDownloadComplete: data is " + data);
+        } else {
+            // download or processing failed
+            Log.e(TAG, "onDownloadComplete: Failed with status " + status);
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
 }
