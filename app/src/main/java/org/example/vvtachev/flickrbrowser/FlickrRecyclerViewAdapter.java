@@ -2,7 +2,9 @@ package org.example.vvtachev.flickrbrowser;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +21,36 @@ class FlickrRecyclerViewAdapter extends RecyclerView.Adapter<FlickrRecyclerViewA
     public FlickrRecyclerViewAdapter(List<Photo> photosList, Context context) {
         this.photosList = photosList;
         this.context = context;
+    }
+
+    @NonNull
+    @Override
+    public FlickrImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Called by the layout manager when it needs a new View
+        Log.d(TAG, "onCreateViewHolder: new View requested");
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.browse, parent, false);
+        return new FlickrImageViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull FlickrImageViewHolder holder, int position) {
+
+
+    }
+
+    @Override
+    public int getItemCount() {
+        Log.d(TAG, "getItemCount: called");
+        return (photosList != null) && (photosList.size() != 0) ? photosList.size() : 0;
+    }
+
+    void loadNewData(List<Photo> newPhotos) {
+        photosList = newPhotos;
+        notifyDataSetChanged();
+    }
+
+    public Photo getPhoto(int position) {
+        return (photosList != null) && (photosList.size() != 0) ? photosList.get(position) : null;
     }
 
     static class FlickrImageViewHolder extends RecyclerView.ViewHolder {
